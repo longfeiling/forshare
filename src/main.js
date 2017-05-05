@@ -2,10 +2,9 @@ import Vue from 'vue'
 import App from './App.vue'
 import VueRouter from 'vue-router'
 import routerconfig from './router'
+import vueResource from 'vue-resource'
 
 Vue.use(VueRouter)
-
-console.log(routerconfig)
 
 const router = new VueRouter({
 	mode:'history',
@@ -17,3 +16,16 @@ new Vue({
   router: router,
   render: h => h(App)
 })
+
+Vue.use(vueResource)
+Vue.http.options.emulateJSON = false
+
+Vue.http.interceptors.push({
+	request: function(request) {
+		return request
+	},
+	response: function(response) {
+		return response
+	}
+})
+
