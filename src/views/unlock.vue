@@ -50,6 +50,7 @@
 </template>
 <script type="text/javascript">
 import xHeader from '../components/x-header.vue'
+var url = require('aUrl');
 	export default {
 		data() {
 			return {
@@ -58,7 +59,20 @@ import xHeader from '../components/x-header.vue'
 		},
 		mounted() {},
 		methods: {
-			submitFn() {},
+			submitFn() {
+				let self = this;
+				var location = JSON.parse(localStorage.getItem("location"));
+				self.$http.post(url + '/shareBicycle/save',{
+					"area":location.district,
+					"city":location.city,
+					"latitude":location.latitude,
+					"longitude":location.longitude,
+					"province":location.province,
+					"share_code":self.value,
+				},function(data) {
+					console.log(data)
+				})
+			},
 			back() {
 				history.go(-1);
 			},
@@ -143,7 +157,7 @@ import xHeader from '../components/x-header.vue'
 	    box-shadow: 0 0 10px #ccc;
 	    margin: 0 auto;
 	    box-sizing: border-box;
-	    margin-top: 25px;
+	    margin-top: 5px;
 	    background-color: #fff;
 	    display: -webkit-flex;
 	    display: flex;

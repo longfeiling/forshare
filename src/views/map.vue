@@ -51,7 +51,15 @@ import xHeader from '../components/x-header.vue'
 				gc.getLocation(point,function(rs) {
 
 					var addComp = rs.addressComponents;
-					console.log(addComp.province + ","+addComp.city+","+addComp.district+","+addComp.street);
+
+					var location = {
+						longitude:position.longitude,
+						latitude:position.latitude,
+						province:addComp.province,
+						city:addComp.city,
+						district:addComp.district,
+					};
+					localStorage.setItem("location",JSON.stringify(location))
 				});
 			},
 			onError(error) {

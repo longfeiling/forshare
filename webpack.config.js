@@ -1,7 +1,7 @@
 var path = require('path')
 var webpack = require('webpack')
 
-module.exports = {
+const webpackConfig = {
   entry: './src/main.js',
   output: {
     path: path.resolve(__dirname, './dist'),
@@ -22,7 +22,7 @@ module.exports = {
       {
         test: /\.js$/,
         loader: 'babel-loader',
-        exclude: /node_modules/
+        exclude: /node_modules/,
       },
       {
         test: /\.(png|jpg|gif|svg)$/,
@@ -35,8 +35,12 @@ module.exports = {
   },
   resolve: {
     alias: {
-      'vue$': 'vue/dist/vue.esm.js'
-    }
+      'vue$': 'vue/dist/vue.esm.js',
+    },
+    extensions: ['.js',',vue','.json'],
+  },
+  externals: {
+    'aUrl': ' "http://10.30.75.217:8080" '
   },
   devServer: {
     historyApiFallback: true,
@@ -68,3 +72,15 @@ if (process.env.NODE_ENV === 'production') {
     })
   ])
 }
+
+
+const vuxLoader = require('vux-loader')
+module.exports = vuxLoader.merge(webpackConfig, {
+  options: {},
+  plugins: [
+    {
+      name: 'vux-ui'
+    }
+    ]
+})
+
