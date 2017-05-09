@@ -1,16 +1,11 @@
 <template>
 	<div class="wrap">
 		<x-header :left-options="{showBack:true}" :right-options="{showMore:true}">手动解锁</x-header>
-	   <!--  <header>
-	       <a href="javascript:;" class="back" @click="back">返回</a>
-	       <h3>共享单车</h3>
-	       <a href="javascript:;" class="saoma"></a>
-	   </header> -->
 	    <div class="main">
 	        <div class="car-num">
 
 	        </div>
-	        <p class="money-dec">计费说明：1元/小时</p>
+	        <!-- <p class="money-dec">计费说明：1元/小时</p> -->
 	        <div class="input">
 	            <div type="text" class="text" id="text" data-content="">{{value}}</div>
 	            <button class="btn" id="submitBtn" @click="submitFn" :class="value==''?'':'active'"></button>
@@ -36,7 +31,7 @@
                    <td class="number" @click="numberFn">7</td>
                    <td class="number" @click="numberFn">8</td>
                    <td class="number" @click="numberFn">9</td>
-                   <td rowspan="2" @click="numberFn">确认</td>
+                   <td rowspan="2" @click="submitFn" :class="value==''?'':'active'">确认</td>
                </tr>
                <tr>
                    <td></td>
@@ -46,35 +41,75 @@
                </tr>
 	       </table>
 	    </footer>
+
+	    <toast v-model="toast.show" type="text" is-show-mask :text="toast.text"></toast>
+	    <confirm v-model="confirm1.show" title=""
+	     @on-cancel="onCancel1" 
+	     @on-confirm="onConfirm1" 
+	     confirm-text="正确"
+	     cancel-text="错误"
+	     :content="confirm1.text">
+	    </confirm>
+	    <confirm v-model="confirm2.show" title="" @on-cancel="onCancel2" @on-confirm="onConfirm2">
+	    	<p>{{confirm2.text}}</p>
+	    	<input type="text" name="psd" placeholder="请输入密码" v-model="psd" />
+	    </confirm>
 	</div>
 </template>
 <script type="text/javascript">
 import xHeader from '../components/x-header.vue'
+import { Toast,Alert,Confirm  } from 'vux'
 var url = require('aUrl');
 	export default {
 		data() {
 			return {
-				value:''
+				value:'',
+				psd:'',
+				alert:{
+					show:false,
+					content:''
+				},
+				confirm1:{
+					show:false,
+					text:''
+				},
+				confirm2:{
+					show:false,
+					text:''
+				},
+				toast:{
+					show:false,
+					text:''
+				},
+				id: '' //单车的编号
 			}
 		},
-		mounted() {},
 		methods: {
 			submitFn() {
 				let self = this;
 				var location = JSON.parse(localStorage.getItem("location"));
-				self.$http.post(url + '/shareBicycle/save',{
+				self.$http.post(url + '/shareBicycle/find',{
 					"area":location.district,
 					"city":location.city,
 					"latitude":location.latitude,
 					"longitude":location.longitude,
 					"province":location.province,
 					"share_code":self.value,
-				},function(data) {
-					console.log(data)
+				}).then(function(res) {
+					if(res.body.code == 0) {
+						let psd = res.body.data.password;
+						self.id = res.body.data.id;
+						if(psd === null) {
+							self.confirm2.show = true;
+							self.confirm2.text = '暂时没有该辆车的密码，请用ofo扫描二维码获取密码并输入';
+						}else{
+							self.psd = psd;
+							self.confirm1.text = "这辆车的密码是"+'<span class="yellow">'+psd+'</span>';
+							self.confirm1.show = true;
+						}
+						self.value = '';
+					}
 				})
-			},
-			back() {
-				history.go(-1);
 			},
 			delFn() {
 				let self = this;
@@ -83,10 +118,64 @@ var url = require('aUrl');
 			numberFn(event) {
 				let self = this;
 				self.value += event.target.innerText;
-			}
+			},
+			onShow() {
+				let self = this;
+				self.hidetag = true;
+			},
+			onCancel1() {
+				let self = this;
+				self.$http.post(url + '/shareBicycle/passwordIsCorrect',{
+					"id":self.id,
+					"isCorrect":false,
+					"password":self.psd,
+				}).then(function(res) {
+					if(res.body.code == 0) {
+						self.psd = ''
+						self.confirm2.show = true;
+						self.confirm2.text = '请输入正确的密码';
+					}else{
+						self.toast.show = true;
+						self.toast.text = res.body.msg;
+					}
+				})
+			},
+			onConfirm1() {
+				let self = this;
+				self.$http.post(url + '/shareBicycle/passwordIsCorrect',{
+					"id":self.id,
+					"isCorrect":true,
+					"password":self.psd,
+				}).then(function(res) {
+					if(res.body.code == 0) {
+						self.toast.show = true;
+						self.toast.text = res.body.msg;
+					}else{
+						self.toast.show = true;
+						self.toast.text = res.body.msg;
+					}
+				})
+			},
+			onCancel2() {},
+			onConfirm2() {
+				let self = this;
+				self.$http.post(url + '/shareBicycle/setPassword',{
+					"id":self.id,
+					"password":self.psd,
+				}).then(function(res) {
+					if(res.body.code == 0) {
+						self.toast.show = true;
+						self.toast.text = res.body.msg;
+					}else{
+						self.toast.show = true;
+						self.toast.text = res.body.msg;
+					}
+					self.value = '';
+				})
+			},
 		},
 		components: {
-			xHeader
+			xHeader,Toast,Alert,Confirm 
 		}
 	}
 </script>
@@ -164,6 +253,7 @@ var url = require('aUrl');
 	    flex-direction: column;
 	    align-items: center;
 	    padding: 10px;
+	    border:1px solid #ccc;
 	}
 	.main div:not(.car-num):not(.text), .main p{
 	    margin-top: 30px;
@@ -171,10 +261,11 @@ var url = require('aUrl');
 	.main .car-num {
 	    width: 288px;
 	    height: 135px;
-	    background: url(https://common.ofo.so/newdist/daa967f224530707a6fec557d033ff2e.png) no-repeat;
+	    background: url(../assets/num.png) no-repeat;
 	    background-position: center center;
 	    background-size: cover;
 	}
+	.main.psd-wrap .car-num{background-image: url(../assets/psd.png);}
 	.main .money-dec{
 	    background-color: #eee;
 	    padding: 0 10px ;
@@ -263,5 +354,14 @@ var url = require('aUrl');
 	footer table tr:nth-child(2) td:last-child{
 	    background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABG0lEQVRYR9WX0Q3CMAxErxPAKIwAm8BksAmMwCh0A2SpQcFNk7smKKVSvxrfvZjYMQM6P0Nnf2wW4ADA3lujDJ0BPKf3SzKVATO+A9gDuDSAMPMrgBeAk4fwALF5IK2BCOZBawbhAXxADQSllfoJqMDC2aA1lqqAFkiASLG5MpSEJhA5ptQHFEFl7SdxJQBbyAgza5LHhgEoQdh3q3P/UOXLAuQgUjujzC1QAWAhaPM1ACUIyfwvAZZOe3wOpCwoZ4Axl+8OFiBX5z8vQ6bJMGtWNSJFWFlLteI1gnLMJq9jeRc1M8HmRjIbSh8AdtGupMbisuGzOQI4xpPx0lgeIGrMA0uAmJnn7oKuf0wKA2/bz2wrbusaqXUHeAOPTFwh/22d1gAAAABJRU5ErkJggg==) no-repeat center;
 	    background-size: 20px 20px;
+	}
+
+	.main.hide {display: none}
+	input[name="psd"]{
+		padding:8px 12px;
+	}
+	.yellow{
+		color:#ffd500;
+		font-size: 20px;
 	}
 </style>

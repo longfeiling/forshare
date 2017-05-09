@@ -30,6 +30,14 @@ const webpackConfig = {
         options: {
           name: '[name].[ext]?[hash]'
         }
+      },
+      {
+        test:/.json$/,
+        loader:'json'
+      },
+      {
+        test:/vux.src.*?js$/,
+        loader:'babel-loader'
       }
     ]
   },
@@ -37,10 +45,10 @@ const webpackConfig = {
     alias: {
       'vue$': 'vue/dist/vue.esm.js',
     },
-    extensions: ['.js',',vue','.json'],
+    extensions: ['.js','.vue','.json'],
   },
   externals: {
-    'aUrl': ' "http://10.30.75.217:8080" '
+    'aUrl': ' "http://10.30.75.217:9090" '
   },
   devServer: {
     historyApiFallback: true,
@@ -80,6 +88,10 @@ module.exports = vuxLoader.merge(webpackConfig, {
   plugins: [
     {
       name: 'vux-ui'
+    },
+    {
+      name: 'less-theme',
+      path: 'src/style/theme.less'
     }
     ]
 })

@@ -3,11 +3,8 @@ import App from './App.vue'
 import VueRouter from 'vue-router'
 import routerconfig from './router'
 import vueResource from 'vue-resource'
-// import {alertPlugin,ToastPlugin} from 'vux'
 
 Vue.use(VueRouter)
-/*Vue.use(alertPlugin)
-Vue.use(ToastPlugin)*/
 
 const router = new VueRouter({
 	mode:'history',
