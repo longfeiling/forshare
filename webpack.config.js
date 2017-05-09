@@ -48,7 +48,8 @@ const webpackConfig = {
     extensions: ['.js','.vue','.json'],
   },
   externals: {
-    'aUrl': ' "http://10.30.75.217:9090" '
+    // 'aUrl': ' "http://10.30.75.217:9090" '
+    'aUrl': ' "http://www.gonyb.com:9090" '
   },
   devServer: {
     historyApiFallback: true,
@@ -62,6 +63,9 @@ const webpackConfig = {
 
 if (process.env.NODE_ENV === 'production') {
   module.exports.devtool = '#source-map'
+  module.exports.externals = {
+    'aUrl' : "http://www.gonyb.com:9090"
+  }
   // http://vue-loader.vuejs.org/en/workflow/production.html
   module.exports.plugins = (module.exports.plugins || []).concat([
     new webpack.DefinePlugin({

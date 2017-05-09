@@ -87,6 +87,7 @@ var url = require('aUrl');
 		methods: {
 			submitFn() {
 				let self = this;
+				console.log("process.env.NODE_ENV==="+process.env.NODE_ENV)
 				var location = JSON.parse(localStorage.getItem("location"));
 				self.$http.post(url + '/shareBicycle/find',{
 					"area":location.district,
