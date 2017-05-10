@@ -1,9 +1,9 @@
 <template>
 	<div class="wrap">
 		<x-header :left-options="{showBack:true}">共享单车</x-header>
-		<div id="container">地图</div>
+		<!-- <div id="container">地图</div> -->
 		
-		<router-link :to="{  path: '/unlock'}">
+		<router-link :to="{  path: '/index'}">
 			<div class="big-btn">立即用车</div>
 		</router-link>
 	</div>
@@ -41,11 +41,11 @@ import xHeader from '../components/x-header.vue'
 				var point = new BMap.Point(longitude,latitude);
 				var gc = new BMap.Geocoder();
 
-				map.centerAndZoom(point, 15);                 // 初始化地图，设置中心点坐标和地图级别 
+				// map.centerAndZoom(point, 15);                 // 初始化地图，设置中心点坐标和地图级别 
 
-				var mk = new BMap.Marker(position.point);
+				/*var mk = new BMap.Marker(position.point);
 					map.addOverlay(mk);
-					map.panTo(position.point);
+					map.panTo(position.point);*/
 
 
 				gc.getLocation(point,function(rs) {

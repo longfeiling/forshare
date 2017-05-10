@@ -48,8 +48,8 @@ const webpackConfig = {
     extensions: ['.js','.vue','.json'],
   },
   externals: {
-    // 'aUrl': ' "http://10.30.75.217:9090" '
-    'aUrl': ' "http://www.gonyb.com:9090" '
+    'aUrl': ' "http://10.30.75.217:9090" '
+    // 'aUrl': ' "http://www.gonyb.com:9090" '
   },
   devServer: {
     historyApiFallback: true,
