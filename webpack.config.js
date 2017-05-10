@@ -54,7 +54,7 @@ const webpackConfig = {
   devServer: {
     historyApiFallback: true,
     noInfo: true,
-    port:8090,
+    port:80,
   },
   performance: {
     hints: false
