@@ -84,6 +84,9 @@ var url = require('aUrl');
 				id: '' //单车的编号
 			}
 		},
+		mounted(){
+			this.getLocation();
+		},
 		methods: {
 			submitFn() {
 				let self = this;
@@ -174,6 +177,56 @@ var url = require('aUrl');
 					self.value = '';
 				})
 			},
+			getLocation() {
+				var options = {
+					enableHighAccuracy:true,
+					maximumAge:1000
+				};
+				if(navigator.geolocation) {  //浏览器支持geolocation
+					var geolocation = new BMap.Geolocation();
+					geolocation.getCurrentPosition(this.onSuccess,this.onError,options);
+				}else{
+					alert("浏览器不支持geolocation")
+				}
+			},
+			onSuccess(position) {
+				var longitude = position.longitude;  //经度
+				var latitude = position.latitude;  //纬度
+				var map = new BMap.Map("container");
+
+				var point = new BMap.Point(longitude,latitude);
+				var gc = new BMap.Geocoder();
+
+				/*map.centerAndZoom(point, 15);                 // 初始化地图，设置中心点坐标和地图级别 
+
+				var mk = new BMap.Marker(position.point);
+					map.addOverlay(mk);
+					map.panTo(position.point);*/
+
+
+				gc.getLocation(point,function(rs) {
+
+					var addComp = rs.addressComponents;
+
+					var location = {
+						longitude:position.longitude,
+						latitude:position.latitude,
+						province:addComp.province,
+						city:addComp.city,
+						district:addComp.district,
+					};
+					localStorage.setItem("location",JSON.stringify(location))
+				});
+			},
+			onError(error) {
+				console.log("error..")
+				switch(error.code) {
+					case 1:  alert("位置服务被拒绝"); break;
+					case 2:  alert("暂时获取不到位置信息"); break;
+					case 3:  alert("获取信息超时"); break;
+					case 4:  alert("未知错误"); break;
+				}
+			}
 		},
 		components: {
 			xHeader,Toast,Alert,Confirm 
