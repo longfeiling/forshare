@@ -5,7 +5,7 @@
   "author": "feeling.long@hey900.comm <feeling.long@hey900.comm>",
   "private": true,
   "scripts": {
-    "dev": "webpack-dev-server --open --hot",
+    "dev": "webpack-dev-server --open  --port 80 --hot --host 0.0.0.0",
     "build": "cross-env NODE_ENV=production webpack --progress --hide-modules"
   },
   "dependencies": {

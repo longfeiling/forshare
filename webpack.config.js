@@ -4,8 +4,8 @@ var webpack = require('webpack')
 const webpackConfig = {
   entry: './src/main.js',
   output: {
-    path: path.resolve(__dirname, './dist'),
-    publicPath: '/dist/',
+    //path: path.resolve(__dirname, './dist'),
+    //publicPath: '/dist/',
     filename: 'build.js'
   },
   module: {
@@ -48,13 +48,14 @@ const webpackConfig = {
     extensions: ['.js','.vue','.json'],
   },
   externals: {
-    'aUrl': ' "http://10.30.75.217:9090" '
-    // 'aUrl': ' "http://www.gonyb.com:9090" '
+    //'aUrl': ' "http://10.30.75.217:9090" '
+    'aUrl': ' "http://www.gonyb.com:9090" '
   },
   devServer: {
+    compress: true,
+    disableHostCheck: true,   // That solved it
     historyApiFallback: true,
-    noInfo: true,
-    port:8090,
+    noInfo: true
   },
   performance: {
     hints: false
