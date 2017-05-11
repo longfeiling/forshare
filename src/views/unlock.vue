@@ -7,40 +7,41 @@
 	        </div>
 	        <!-- <p class="money-dec">计费说明：1元/小时</p> -->
 	        <div class="input">
-	            <div type="text" class="text" id="text" data-content="">{{value}}</div>
+	        	<input type="text" class="text" name="" id="text" v-model="value" />
+	            <!-- <div type="text" class="text" id="text" data-content="">{{value}}</div> -->
 	            <button class="btn" id="submitBtn" @click="submitFn" :class="value==''?'':'active'"></button>
 	        </div>
 	        <p class="input-dec">输入车牌号,获取解锁码</p>
 
 	    </div>
-	    <footer>
+	    <!-- <footer>
 	       <table width="100%" border="1" cellspacing="0" cellpadding="0">
-               <tr>
-                   <td class="number" @click="numberFn">1</td>
-                   <td class="number" @click="numberFn">2</td>
-                   <td class="number" @click="numberFn">3</td>
-                    <td></td>
-               </tr>
-               <tr>
-                   <td class="number" @click="numberFn">4</td>
-                   <td class="number" @click="numberFn">5</td>
-                   <td class="number" @click="numberFn">6</td>
-                    <td id="del" @click="delFn"></td>
-               </tr>
-               <tr>
-                   <td class="number" @click="numberFn">7</td>
-                   <td class="number" @click="numberFn">8</td>
-                   <td class="number" @click="numberFn">9</td>
-                   <td rowspan="2" @click="submitFn" :class="value==''?'':'active'">确认</td>
-               </tr>
-               <tr>
-                   <td></td>
-                   <td class="number">0</td>
-                   <td></td>
-                    
-               </tr>
+	                   <tr>
+	                       <td class="number" @click="numberFn">1</td>
+	                       <td class="number" @click="numberFn">2</td>
+	                       <td class="number" @click="numberFn">3</td>
+	                        <td></td>
+	                   </tr>
+	                   <tr>
+	                       <td class="number" @click="numberFn">4</td>
+	                       <td class="number" @click="numberFn">5</td>
+	                       <td class="number" @click="numberFn">6</td>
+	                        <td id="del" @click="delFn"></td>
+	                   </tr>
+	                   <tr>
+	                       <td class="number" @click="numberFn">7</td>
+	                       <td class="number" @click="numberFn">8</td>
+	                       <td class="number" @click="numberFn">9</td>
+	                       <td rowspan="2" @click="submitFn" :class="value==''?'':'active'">确认</td>
+	                   </tr>
+	                   <tr>
+	                       <td></td>
+	                       <td class="number">0</td>
+	                       <td></td>
+	                        
+	                   </tr>
 	       </table>
-	    </footer>
+	    </footer> -->
 
 	    <toast v-model="toast.show" type="text" is-show-mask :text="toast.text"></toast>
 	    <confirm v-model="confirm1.show" title=""
@@ -114,14 +115,6 @@ var url = require('aUrl');
 						self.value = '';
 					}
 				})
-			},
-			delFn() {
-				let self = this;
-				self.value = self.value.slice(0,self.value.length-1)
-			},
-			numberFn(event) {
-				let self = this;
-				self.value += event.target.innerText;
 			},
 			onShow() {
 				let self = this;
@@ -300,7 +293,7 @@ var url = require('aUrl');
 	    box-shadow: 0 0 10px #ccc;
 	    margin: 0 auto;
 	    box-sizing: border-box;
-	    margin-top: 5px;
+	    margin-top: 5rem;
 	    background-color: #fff;
 	    display: -webkit-flex;
 	    display: flex;
@@ -344,6 +337,7 @@ var url = require('aUrl');
 	    color:black;
 	    line-height: 60px;
 	    position: relative;
+	    font-size: 30px;
 	}
 	/*光标*/
 	.main .input .text::before{
